@@ -13,6 +13,11 @@ const each = (elements, cb) => {
 const map = (elements, cb) => {
   // Produces a new array of values by mapping each value in list through a transformation function.
   // Return the new array.
+  const newArr = [];
+  for (let i = 0; i< elements.length; i++) {
+    newArr.push(cb(elements[i]));
+  }
+  return newArr;
 };
 
 /* ======================== Closure Practice ============================ */
@@ -22,10 +27,24 @@ const counter = () => {
   // Example: const newCounter = counter();
   // newCounter(); // 1
   // newCounter(); // 2
+  count = 0;
+  return () => {
+    count++;
+    return count;
+  }
+
 };
 const limitFunctionCallCount = (cb, n) => {
   // Should return a function that invokes `cb`.
   // The returned function should only allow `cb` to be invoked `n` times.
+  let count = 0;
+  return (...args) => {
+    if(count === n) {
+      return null;
+    }
+    count +=1;
+    return cb(...args);
+  };
 };
 
 /* ======================== Prototype Practice ============================ */
@@ -34,17 +53,28 @@ const limitFunctionCallCount = (cb, n) => {
 
 // Create a CuboidMaker constructor function that accepts properties for length, width, and height
 const CuboidMaker = function CuboidMaker(options) {
+  this.length = options.length;
+  this.width = options.width;
+  this.height = options.height;
 };
 
 // Create a seperate function property of CuboidMaker that returns the volume of a given cuboid's length, width, and height
 // Formula for cuboid volume: length * width * height
 CuboidMaker.prototype.volume = function volume() {
+  return this.length * this.width * this.height;
 };
 
 // Create a seperate function property of CuboidMaker that returns the surface area of a given cuboid's length, width, and height. 
 // Formula for cuboid surface area of a cube: 2(length * width + length * height + width * height)
 CuboidMaker.prototype.surfaceArea = function surfaceArea() {
+  return 2 * (this.length * this.width + this.length * this.height + this.width * this.height);
 };
+
+const cuboid = new CuboidMaker({
+    length: 4,
+    width: 5,
+    height: 5,
+  });
 
 /* ======================== Class Practice ============================ */
 
@@ -52,22 +82,42 @@ CuboidMaker.prototype.surfaceArea = function surfaceArea() {
 class Cuboid {
   constructor(options) {
     // Implement this constructor
+    this.length = options.length;
+    this.width = options.width;
+    this.height = options.height;
   }
   volume() {
     // Implement this function
+    return this.length * this.width * this.height;
   }
   surfaceArea() {
     // Implement this function
+    return 2 * (this.length * this.width + this.length * this.height + this.width * this.height);
   }
 }
 // Task 2: Create a new class called Cube. Extend the Cube class with the CuboidMaker class.
-// Create two new methods on the Cube class to calculate the volume and surface area of a cube given the same values passed in from CuboidMaker.
-class Cube { // Be sure to use `extends` to extend the Cuboid class
+// Create two new methods on the Cube class to calculate the volume and surface area of a 
+// cube given the same values passed in from CuboidMaker.
+class Cube extends CuboidMaker { // Be sure to use `extends` to extend the Cuboid class
   constructor(options) {
     // Use the parent constructor
+    super(options);
+    this.isCube = options.isCube;
   }
+  volume() {
+        return this.length * this.width * this.height;
+      }
+  surfaceArea() {
+        return 6 * (this.length * this.width);
+      }
 }
 
+const cube = new Cube({
+    length: 2,
+    width: 2,
+    height: 2,
+    isCube:true,
+  });
 /* ======================== Stretch Challenges ============================ */
 
 
